@@ -6,7 +6,7 @@ import {setUser} from "./authSlice"
 
 export const signUp = createAsyncThunk(
   "user/signUp",
-  async ({ name, email, password, navigate }, { rejectWithValue }) => {
+  async ({ name, email, password }, { rejectWithValue }) => {
     try {
       const data = await fetchAPI(`${API_BASE}/users/signup`, {
         method: "POST",
@@ -22,7 +22,7 @@ export const signUp = createAsyncThunk(
       }
 
       showSuccess(data.message);
-      return navigate;
+      return data;
     } catch (err) {
       showError(err.message);
       return rejectWithValue(err.message);

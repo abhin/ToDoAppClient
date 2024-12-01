@@ -5,7 +5,6 @@ import { logout } from "../redux/Slice/authSlice";
 function Header() {
   const { user } = useSelector((state) => state.Auth);
   const dispatch = useDispatch();
-  const profilePic = `http://localhost:8000/${user?.profilePic}`;
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-primary mb-2">
       <div className="container">
@@ -51,7 +50,7 @@ function Header() {
                   <li className="nav-item">
                     <Link className="nav-link" to="/user-profile">
                       <img
-                        src={profilePic}
+                        src={user?.profilePic}
                         style={{ width: "40px", height: "40px" }}
                       />
                     </Link>
