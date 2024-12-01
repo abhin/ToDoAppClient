@@ -1,14 +1,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { showError, showSuccess } from "../../Functions/Message";
-import fetchAPI from "../../Functions/FetchAPI";
-import { API_BASE } from "../../configs/constants";
+import { showError, showSuccess } from "../../Functions/utils";
+import fetchAPI from "../../Functions/utils";
+import {getEnvValue} from "../../Functions/utils.jsx";
 import {setUser} from "./authSlice"
 
 export const signUp = createAsyncThunk(
   "user/signUp",
   async ({ name, email, password }, { rejectWithValue }) => {
     try {
-      const data = await fetchAPI(`${API_BASE}/users/signup`, {
+      const data = await fetchAPI(`${getEnvValue('API_BASE')}/users/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -37,7 +37,7 @@ export const updateProfile = createAsyncThunk(
     const { user } = state.Auth;
 
     try {
-      const response = await fetch(`${API_BASE}/users/updateprofile`, {
+      const response = await fetch(`${getEnvValue('API_BASE')}/users/updateprofile`, {
         method: "PUT",
         headers: {
           Authorization: user?.token,

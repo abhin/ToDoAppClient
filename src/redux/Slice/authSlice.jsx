@@ -1,13 +1,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { showError, showSuccess } from "../../Functions/Message";
+import { showError, showSuccess } from "../../Functions/utils";
 import storage from "redux-persist/lib/storage";
 import { persistReducer } from "redux-persist";
+import {getEnvValue} from "../../Functions/utils.jsx";
 
 export const login = createAsyncThunk(
   "auth/login",
   async ({ email, password, navigate }, { rejectWithValue }) => {
     try {
-      const response = await fetch("http://localhost:8000/api/v1/auth/login", {
+      const response = await fetch(`${getEnvValue('API_BASE')}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -42,7 +43,7 @@ export const verifyGoogleUser = createAsyncThunk(
     }
 
     try {
-      const response = await fetch("http://localhost:8000/api/v1/auth/google/verify", {
+      const response = await fetch(`${getEnvValue('API_BASE')}/auth/google/verify`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -78,7 +79,7 @@ const authSlice = createSlice({
   },
   reducers: {
     googleLogin: () => {
-      window.open("http://localhost:8000/api/v1/auth/google", "_self");
+      window.open(`${getEnvValue('API_BASE')}/auth/google`, "_self");
     },
     logout: (state) => {
       state.user = null;
