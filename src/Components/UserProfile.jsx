@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateProfile } from "../redux/Slice/userSlice";
+import { getEnvValue } from "../../Functions/utils.jsx";
 
 export default function UserProfile() {
   const { user } = useSelector((state) => state.Auth) || {};
   const { name = "", profilePic = "" } = user || {};
-  
+
   const dispatch = useDispatch();
   const [uName, setUname] = useState(name);
   const [profilePhoto, setProfilePhoto] = useState(null);
@@ -53,7 +54,7 @@ export default function UserProfile() {
               {profilePic && (
                 <img
                   className="m-2 d-block"
-                  src={`http://localhost:8000/${profilePic}`}
+                  src={`${getEnvValue("SERVER_URL")}/${profilePic}`}
                   style={{ width: "150px", height: "150px" }}
                   alt="Profile"
                 />
