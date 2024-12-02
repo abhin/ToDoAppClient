@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateProfile } from "../redux/Slice/userSlice";
+import { showError } from "../Functions/utils";
 export default function UserProfile() {
   const { authUser } = useSelector((state) => state.Auth) || {};
   const { name = "", profilePic = "" } = authUser || {};
