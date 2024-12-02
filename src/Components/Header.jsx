@@ -1,7 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { logout } from "../redux/Slice/authSlice";
-import { getProfilePicUrl } from "../Functions/utilities";
 
 function Header() {
   const { authUser } = useSelector((state) => state.Auth);

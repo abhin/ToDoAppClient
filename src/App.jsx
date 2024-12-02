@@ -18,6 +18,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/:token" element={<Login />} />
+          <Route path="/activation-success/:succmsg" element={<Login />} />
           <Route
             path="/dashboard"
             element={

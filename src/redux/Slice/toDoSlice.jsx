@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { showError, showSuccess } from "../../Functions/utils";
-import fetchAPI from "../../Functions/utils";
+import { fetchAPI } from "../../Functions/utils";
 
 export const addTodo = createAsyncThunk(
   "ToDo/addTodo",
@@ -9,32 +9,39 @@ export const addTodo = createAsyncThunk(
     const { authUser } = state.Auth;
 
     if (!authUser) {
-      showError("User is not logged in!");
       return rejectWithValue("User is not logged in!");
     }
 
-    try {
-      const data = await fetchAPI(`${import.meta.env.VITE_API_BASE}/todos/create`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: authUser?.token,
-        },
-        body: JSON.stringify({ title, description }),
-      });
+    if (!title?.trim() || !description?.trim()) {
+      return rejectWithValue("Title and description are required!");
+    }
 
-      if (!data.success) {
-        showError(data.message);
-        return rejectWithValue(data.message);
+    try {
+      const data = await fetchAPI(
+        `${import.meta.env.VITE_API_BASE}/todos/create`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: authUser?.token,
+          },
+          body: JSON.stringify({ title, description }),
+        }
+      );
+
+      if (!data?.success) {
+        return rejectWithValue(data?.message);
       }
-      showSuccess(data.message);
-      return data.toDo;
+
+      showSuccess(data?.message);
+      return data;
     } catch (err) {
-      showError(err.message);
-      return rejectWithValue(err.message);
+      return rejectWithValue(err?.message || "An unexpected error occurred");
     }
   }
 );
+
+
 
 export const getAllToDo = createAsyncThunk(
   "ToDo/getAllToDo",
@@ -48,23 +55,26 @@ export const getAllToDo = createAsyncThunk(
     }
 
     try {
-      const data = await fetchAPI(`${import.meta.env.VITE_API_BASE}/todos/read`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: authUser?.token,
-        },
-      });
+      const data = await fetchAPI(
+        `${import.meta.env?.VITE_API_BASE}/todos/read`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: authUser?.token,
+          },
+        }
+      );
 
-      if (!data.success) {
-        showError(data.message);
-        return rejectWithValue(data.message);
+      if (!data?.success) {
+        showError(data?.message);
+        return rejectWithValue(data?.message);
       }
 
-      return data.toDo;
+      return data?.toDo;
     } catch (err) {
-      showError(err.message);
-      return rejectWithValue(err.message);
+      showError(err?.message);
+      return rejectWithValue(err?.message);
     }
   }
 );
@@ -81,26 +91,29 @@ export const updateToDo = createAsyncThunk(
     }
 
     try {
-      const data = await fetchAPI(`${import.meta.env.VITE_API_BASE}/todos/update`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: authUser?.token,
-        },
-        body: JSON.stringify({ id, completed }),
-      });
+      const data = await fetchAPI(
+        `${import.meta.env.VITE_API_BASE}/todos/update`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: authUser?.token,
+          },
+          body: JSON.stringify({ id, completed }),
+        }
+      );
 
-      if (!data.success) {
-        showError(data.message);
-        return rejectWithValue(data.message);
+      if (!data?.success) {
+        showError(data?.message);
+        return rejectWithValue(data?.message);
       }
 
       dispatch(getAllToDo());
-      showSuccess(data.message);
+      showSuccess(data?.message);
       return id;
     } catch (err) {
-      showError(err.message);
-      return rejectWithValue(err.message);
+      showError(err?.message);
+      return rejectWithValue(err?.message);
     }
   }
 );
@@ -117,24 +130,27 @@ export const deleteToDo = createAsyncThunk(
     }
 
     try {
-      const data = await fetchAPI(`${import.meta.env.VITE_API_BASE}/todos/delete/${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: authUser?.token,
-        },
-      });
+      const data = await fetchAPI(
+        `${import.meta.env.VITE_API_BASE}/todos/delete/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: authUser?.token,
+          },
+        }
+      );
 
-      if (!data.success) {
-        showError(data.message);
-        return rejectWithValue(data.message);
+      if (!data?.success) {
+        showError(data?.message);
+        return rejectWithValue(data?.message);
       }
 
       dispatch(getAllToDo());
-      showSuccess(data.message);
+      showSuccess(data?.message);
       return id;
     } catch (err) {
-      showError(err.message);
-      return rejectWithValue(err.message);
+      showError(err?.message);
+      return rejectWithValue(err?.message);
     }
   }
 );
@@ -154,7 +170,7 @@ const toDoSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(addTodo.fulfilled, (state, action) => {
-        state.toDos.unshift(action.payload);
+        state.toDos.unshift(action.payload?.toDo);
       })
       .addCase(getAllToDo.fulfilled, (state, action) => {
         state.toDos = action.payload;

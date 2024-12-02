@@ -1,8 +1,13 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useJwt } from "react-jwt";
-import { login, googleLogin, verifyGoogleUser } from "../redux/Slice/authSlice.jsx";
+import {
+  login,
+  googleLogin,
+  verifyGoogleUser,
+} from "../redux/Slice/authSlice.jsx";
 import { useEffect, useState } from "react";
-import { useDispatch} from "react-redux";
+import { useDispatch } from "react-redux";
+import { showSuccess } from "../Functions/utils.jsx";
 
 export default function Login() {
   const dispatch = useDispatch();
@@ -11,9 +16,8 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { token } = useParams();
+  const { token, succmsg } = useParams();
   const { isExpired } = useJwt(token);
-
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -22,7 +26,9 @@ export default function Login() {
   };
 
   const handleGoogleLogin = async () => {
-    const data = await dispatch(verifyGoogleUser({ token, isExpired })).unwrap();
+    const data = await dispatch(
+      verifyGoogleUser({ token, isExpired })
+    ).unwrap();
     data?.token && navigate("/dashboard");
   };
 
@@ -31,6 +37,12 @@ export default function Login() {
       handleGoogleLogin();
     }
   }, [token]);
+
+  useEffect(() => {
+    if (succmsg) {
+      showSuccess(succmsg);
+    }
+  }, [succmsg]);
 
   return (
     <div className="d-flex justify-content-center align-items-center vh-100 bg-light">

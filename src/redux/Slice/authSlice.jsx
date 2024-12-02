@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { showError, showSuccess } from "../../Functions/Message";
+import { showError, showSuccess } from "../../Functions/utils";
 import storage from "redux-persist/lib/storage";
 import { persistReducer } from "redux-persist";
 

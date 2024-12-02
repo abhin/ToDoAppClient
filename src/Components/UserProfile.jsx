@@ -1,12 +1,8 @@
 import {useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateProfile } from "../redux/Slice/userSlice";
-import { setAuthUser } from "../redux/Slice/authSlice";
-import { showError } from "../Functions/Message";
-
 export default function UserProfile() {
   const { authUser } = useSelector((state) => state.Auth) || {};
-  const { error } = useSelector((state) => state.User) || {};
   const { name = "", profilePic = "" } = authUser || {};
 
   const dispatch = useDispatch();
@@ -22,8 +18,7 @@ export default function UserProfile() {
     }
     setProfilePhoto(null);
 
-    const userData = await dispatch(updateProfile({ formData })).unwrap();
-    userData && dispatch(setAuthUser(userData)) || showError(error);
+    dispatch(updateProfile({ formData })).unwrap();
   };
 
   return (
@@ -57,7 +52,7 @@ export default function UserProfile() {
               {profilePic && (
                 <img
                   className="m-2 d-block"
-                  src={`${import.meta.env.VITE_SERVER_URL}/${profilePic}`}
+                  src={profilePic}
                   style={{ width: "150px", height: "150px" }}
                   alt="Profile"
                 />

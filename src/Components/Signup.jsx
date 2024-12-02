@@ -10,15 +10,18 @@ function Signup() {
   const [email, setEmail] = useState("");
   const [password, setpassword] = useState("");
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const result = await dispatch(signUp({ name, email, password })).unwrap();
+    if (result.success) navigate("/login");
+  }
+
   return (
     <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
       <div className="card p-4 shadow" style={{ width: "400px" }}>
         <h2 className="text-center mb-4">Sign Up</h2>
         <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            dispatch(signUp({ name, email, password, navigate }));
-          }}
+          onSubmit={handleSubmit}
         >
           <div className="mb-3">
             <label htmlFor="username" className="form-label">

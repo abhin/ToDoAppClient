@@ -1,11 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { showError, showSuccess } from "../../Functions/utils";
 import { fetchAPI } from "../../Functions/utils.jsx";
-import { setUser } from "./authSlice";
+import { setAuthUser } from "./authSlice";
 
 export const signUp = createAsyncThunk(
   "user/signUp",
-  async ({ name, email, password, navigate }, { rejectWithValue }) => {
+  async ({ name, email, password }, { rejectWithValue }) => {
     try {
       const data = await fetchAPI(
         `${import.meta.env.VITE_API_BASE}/users/signup`,
@@ -24,7 +24,7 @@ export const signUp = createAsyncThunk(
       }
 
       showSuccess(data.message);
-      return navigate;
+      return data;
     } catch (err) {
       showError(err.message);
       return rejectWithValue(err.message);
@@ -44,7 +44,7 @@ export const updateProfile = createAsyncThunk(
         {
           method: "PUT",
           headers: {
-            Authorization: user?.token,
+            Authorization: authUser?.token,
           },
           body: formData,
         }
@@ -60,6 +60,7 @@ export const updateProfile = createAsyncThunk(
       }
 
       showSuccess(data.message || "Profile updated successfully!");
+      dispatch(setAuthUser(data?.user));
       return data?.user;
     } catch (err) {
       showError(err.message || "An unexpected error occurred.");
@@ -80,7 +81,7 @@ const userSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(updateProfile.fulfilled, (state) => {
+      .addCase(updateProfile.fulfilled, (state, action) => {
         state.loading = false;
       })
       .addCase(updateProfile.rejected, (state, action) => {
