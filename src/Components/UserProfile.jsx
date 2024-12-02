@@ -1,4 +1,4 @@
-import {useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateProfile } from "../redux/Slice/userSlice";
 export default function UserProfile() {
@@ -11,14 +11,18 @@ export default function UserProfile() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("name", uName || name);
-    if (profilePhoto) {
-      formData.append("profilePhoto", profilePhoto);
-    }
-    setProfilePhoto(null);
+    try {
+      const formData = new FormData();
+      formData.append("name", uName || name);
+      if (profilePhoto) {
+        formData.append("profilePhoto", profilePhoto);
+      }
+      setProfilePhoto(null);
 
-    dispatch(updateProfile({ formData })).unwrap();
+      dispatch(updateProfile({ formData })).unwrap();
+    } catch (e) {
+      showError(e.message);
+    }
   };
 
   return (

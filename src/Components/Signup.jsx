@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { signUp } from "../redux/Slice/userSlice.jsx";
 import { useNavigate } from "react-router-dom";
+import { showError } from "../Functions/utils.jsx";
 
 function Signup() {
   const dispatch = useDispatch();
@@ -12,8 +13,12 @@ function Signup() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const result = await dispatch(signUp({ name, email, password })).unwrap();
-    if (result.success) navigate("/login");
+    try {
+      const result = await dispatch(signUp({ name, email, password })).unwrap();
+      if (result.success) navigate("/login");
+    } catch(e) {
+      showError(e.message);
+    }
   }
 
   return (

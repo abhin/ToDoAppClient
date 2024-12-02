@@ -7,7 +7,7 @@ import {
 } from "../redux/Slice/authSlice.jsx";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { showSuccess } from "../Functions/utils.jsx";
+import { showError, showSuccess } from "../Functions/utils.jsx";
 
 export default function Login() {
   const dispatch = useDispatch();
@@ -21,15 +21,23 @@ export default function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    try{
     const data = await dispatch(login({ email, password, navigate })).unwrap();
     data?.token && navigate("/dashboard");
+  } catch(e) {
+    showError(e.message);
+  }
   };
 
   const handleGoogleLogin = async () => {
-    const data = await dispatch(
-      verifyGoogleUser({ token, isExpired })
-    ).unwrap();
-    data?.token && navigate("/dashboard");
+    try {
+      const data = await dispatch(
+        verifyGoogleUser({ token, isExpired })
+      ).unwrap();
+      data?.token && navigate("/dashboard");
+    } catch (e) {
+      showError(e.message);
+    }
   };
 
   useEffect(() => {

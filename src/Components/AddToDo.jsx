@@ -10,10 +10,14 @@ export default function AddTodo() {
   const [description, setDesc] = useState("");
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    dispatch(addTodo({ title, description }));
-    setTitle("");
-    setDesc("");
+    try {
+      e.preventDefault();
+      dispatch(addTodo({ title, description }));
+      setTitle("");
+      setDesc("");
+    } catch (e) {
+      showError(e.message);
+    }
   };
 
   useEffect(() => {
