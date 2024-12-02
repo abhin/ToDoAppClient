@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateProfile } from "../redux/Slice/userSlice";
 import { setAuthUser } from "../redux/Slice/authSlice";
 import { showError } from "../Functions/Message";
-import { getProfilePicUrl } from "../Functions/utilities";
 
 export default function UserProfile() {
   const { authUser } = useSelector((state) => state.Auth) || {};
@@ -58,7 +57,7 @@ export default function UserProfile() {
               {profilePic && (
                 <img
                   className="m-2 d-block"
-                  src={getProfilePicUrl(authUser)}
+                  src={`${import.meta.env.VITE_SERVER_URL}/${profilePic}`}
                   style={{ width: "150px", height: "150px" }}
                   alt="Profile"
                 />

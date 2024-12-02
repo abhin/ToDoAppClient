@@ -1,19 +1,22 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { showError, showSuccess } from "../../Functions/Message";
-import fetchAPI from "../../Functions/FetchAPI";
-import { API_BASE } from "../../configs/constants";
+import { showError, showSuccess } from "../../Functions/utils";
+import { fetchAPI } from "../../Functions/utils.jsx";
+import { setUser } from "./authSlice";
 
 export const signUp = createAsyncThunk(
   "user/signUp",
   async ({ name, email, password, navigate }, { rejectWithValue }) => {
     try {
-      const data = await fetchAPI(`${API_BASE}/users/signup`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, email, password }),
-      });
+      const data = await fetchAPI(
+        `${import.meta.env.VITE_API_BASE}/users/signup`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ name, email, password }),
+        }
+      );
 
       if (!data.success) {
         showError(data.message);
@@ -36,18 +39,23 @@ export const updateProfile = createAsyncThunk(
     const { authUser } = state.Auth;
 
     try {
-      const response = await fetch(`${API_BASE}/users/updateprofile`, {
-        method: "PUT",
-        headers: {
-          Authorization: authUser?.token,
-        },
-        body: formData,
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE}/users/updateprofile`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: user?.token,
+          },
+          body: formData,
+        }
+      );
 
       const data = await response.json();
 
       if (!response.ok || !data.success) {
-        showError(data.message || "An error occurred while updating the profile.");
+        showError(
+          data.message || "An error occurred while updating the profile."
+        );
         return rejectWithValue(data.message || "Failed to update profile.");
       }
 

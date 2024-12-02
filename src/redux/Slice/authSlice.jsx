@@ -7,7 +7,7 @@ export const login = createAsyncThunk(
   "auth/login",
   async ({ email, password }, { rejectWithValue }) => {
     try {
-      const response = await fetch("http://localhost:8000/api/v1/auth/login", {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -41,7 +41,7 @@ export const verifyGoogleUser = createAsyncThunk(
     }
 
     try {
-      const response = await fetch("http://localhost:8000/api/v1/auth/google/verify", {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE}/auth/google/verify`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -76,7 +76,7 @@ const authSlice = createSlice({
   },
   reducers: {
     googleLogin: () => {
-      window.open("http://localhost:8000/api/v1/auth/google", "_self");
+      window.open(`${import.meta.env.VITE_API_BASE}/auth/google`, "_self");
     },
     logout: (state) => {
       state.authUser = null;

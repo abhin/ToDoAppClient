@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { showError, showSuccess } from "../../Functions/Message";
-import fetchAPI from "../../Functions/FetchAPI";
-import {API_BASE} from "../../configs/constants";
+import { showError, showSuccess } from "../../Functions/utils";
+import fetchAPI from "../../Functions/utils";
 
 export const addTodo = createAsyncThunk(
   "ToDo/addTodo",
@@ -15,7 +14,7 @@ export const addTodo = createAsyncThunk(
     }
 
     try {
-      const data = await fetchAPI(`${API_BASE}/todos/create`, {
+      const data = await fetchAPI(`${import.meta.env.VITE_API_BASE}/todos/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -49,7 +48,7 @@ export const getAllToDo = createAsyncThunk(
     }
 
     try {
-      const data = await fetchAPI(`${API_BASE}/todos/read`, {
+      const data = await fetchAPI(`${import.meta.env.VITE_API_BASE}/todos/read`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -82,7 +81,7 @@ export const updateToDo = createAsyncThunk(
     }
 
     try {
-      const data = await fetchAPI(`${API_BASE}/todos/update`, {
+      const data = await fetchAPI(`${import.meta.env.VITE_API_BASE}/todos/update`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -118,7 +117,7 @@ export const deleteToDo = createAsyncThunk(
     }
 
     try {
-      const data = await fetchAPI(`${API_BASE}/todos/delete/${id}`, {
+      const data = await fetchAPI(`${import.meta.env.VITE_API_BASE}/todos/delete/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: authUser?.token,

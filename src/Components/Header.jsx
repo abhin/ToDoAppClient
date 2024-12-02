@@ -53,7 +53,7 @@ function Header() {
                     <Link className="nav-link" to="/user-profile">
                     
                       <img
-                        src={getProfilePicUrl(authUser)}
+                        src={authUser?.profilePic}
                         style={{ width: "40px", height: "40px" }}
                       />
                     </Link>
