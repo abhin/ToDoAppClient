@@ -1,10 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { showError, showSuccess } from "../../Functions/utils";
 import { fetchAPI } from "../../Functions/utils";
+import { setAuthUser } from "./authSlice";
 
 export const addTodo = createAsyncThunk(
   "ToDo/addTodo",
-  async ({ title, description }, { rejectWithValue, getState }) => {
+  async ({ title, description }, { rejectWithValue, getState, dispatch }) => {
     const state = getState();
     const { authUser } = state.Auth;
 
@@ -30,6 +31,7 @@ export const addTodo = createAsyncThunk(
       );
 
       if (!data?.success) {
+        data?.invalidToken && dispatch(setAuthUser(null));
         return rejectWithValue(data?.message);
       }
 
@@ -45,7 +47,7 @@ export const addTodo = createAsyncThunk(
 
 export const getAllToDo = createAsyncThunk(
   "ToDo/getAllToDo",
-  async (_, { rejectWithValue, getState }) => {
+  async (_, { rejectWithValue, getState, dispatch }) => {
     const state = getState();
     const { authUser } = state.Auth;
 
@@ -68,6 +70,7 @@ export const getAllToDo = createAsyncThunk(
 
       if (!data?.success) {
         showError(data?.message);
+        data?.invalidToken && dispatch(setAuthUser(null));
         return rejectWithValue(data?.message);
       }
 
@@ -105,6 +108,7 @@ export const updateToDo = createAsyncThunk(
 
       if (!data?.success) {
         showError(data?.message);
+        data?.invalidToken && dispatch(setAuthUser(null));
         return rejectWithValue(data?.message);
       }
 
@@ -142,6 +146,7 @@ export const deleteToDo = createAsyncThunk(
 
       if (!data?.success) {
         showError(data?.message);
+        data?.invalidToken && dispatch(setAuthUser(null));
         return rejectWithValue(data?.message);
       }
 

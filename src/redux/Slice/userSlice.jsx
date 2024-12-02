@@ -56,6 +56,8 @@ export const updateProfile = createAsyncThunk(
         showError(
           data.message || "An error occurred while updating the profile."
         );
+
+        data?.invalidToken && dispatch(setAuthUser(null));
         return rejectWithValue(data.message || "Failed to update profile.");
       }
 
