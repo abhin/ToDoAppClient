@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { showError, showSuccess } from "../../Functions/utils";
 import { fetchAPI } from "../../Functions/utils";
 import { setAuthUser } from "./authSlice";
+import { BASE_URL } from "../../config";
 
 export const addTodo = createAsyncThunk(
   "ToDo/addTodo",
@@ -19,7 +20,7 @@ export const addTodo = createAsyncThunk(
 
     try {
       const data = await fetchAPI(
-        `${import.meta.env.VITE_API_BASE}/todos/create`,
+        `${BASE_URL}/todos/create`,
         {
           method: "POST",
           headers: {
@@ -95,7 +96,7 @@ export const updateToDo = createAsyncThunk(
 
     try {
       const data = await fetchAPI(
-        `${import.meta.env.VITE_API_BASE}/todos/update`,
+        `${BASE_URL}/todos/update`,
         {
           method: "PUT",
           headers: {
@@ -135,7 +136,7 @@ export const deleteToDo = createAsyncThunk(
 
     try {
       const data = await fetchAPI(
-        `${import.meta.env.VITE_API_BASE}/todos/delete/${id}`,
+        `${BASE_URL}/todos/delete/${id}`,
         {
           method: "DELETE",
           headers: {

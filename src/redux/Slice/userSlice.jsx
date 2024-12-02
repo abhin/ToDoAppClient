@@ -2,13 +2,14 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { showError, showSuccess } from "../../Functions/utils";
 import { fetchAPI } from "../../Functions/utils.jsx";
 import { setAuthUser } from "./authSlice";
+import { BASE_URL } from "../../config.js";
 
 export const signUp = createAsyncThunk(
   "user/signUp",
   async ({ name, email, password }, { rejectWithValue }) => {
     try {
       const data = await fetchAPI(
-        `${import.meta.env.VITE_API_BASE}/users/signup`,
+        `${BASE_URL}/users/signup`,
         {
           method: "POST",
           headers: {
@@ -40,7 +41,7 @@ export const updateProfile = createAsyncThunk(
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_BASE}/users/updateprofile`,
+        `${BASE_URL}/users/updateprofile`,
         {
           method: "PUT",
           headers: {
