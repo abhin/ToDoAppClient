@@ -1,25 +1,25 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { showError, showSuccess } from "../../Functions/utils";
-import fetchAPI from "../../Functions/utils";
-import {getEnvValue} from "../../Functions/utils.jsx";
+import { showError, showSuccess } from "../../Functions/Message";
+import fetchAPI from "../../Functions/FetchAPI";
+import {API_BASE} from "../../configs/constants";
 
 export const addTodo = createAsyncThunk(
   "ToDo/addTodo",
   async ({ title, description }, { rejectWithValue, getState }) => {
     const state = getState();
-    const { user } = state.Auth;
+    const { authUser } = state.Auth;
 
-    if (!user) {
+    if (!authUser) {
       showError("User is not logged in!");
       return rejectWithValue("User is not logged in!");
     }
 
     try {
-      const data = await fetchAPI(`${getEnvValue('API_BASE')}/todos/create`, {
+      const data = await fetchAPI(`${API_BASE}/todos/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: user?.token,
+          Authorization: authUser?.token,
         },
         body: JSON.stringify({ title, description }),
       });
@@ -41,19 +41,19 @@ export const getAllToDo = createAsyncThunk(
   "ToDo/getAllToDo",
   async (_, { rejectWithValue, getState }) => {
     const state = getState();
-    const { user } = state.Auth;
+    const { authUser } = state.Auth;
 
-    if (!user) {
+    if (!authUser) {
       showError("User is not logged in!");
       return rejectWithValue("User is not logged in!");
     }
 
     try {
-      const data = await fetchAPI(`${getEnvValue('API_BASE')}/todos/read`, {
+      const data = await fetchAPI(`${API_BASE}/todos/read`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: user?.token,
+          Authorization: authUser?.token,
         },
       });
 
@@ -74,19 +74,19 @@ export const updateToDo = createAsyncThunk(
   "ToDo/updateToDo",
   async ({ id, completed }, { rejectWithValue, dispatch, getState }) => {
     const state = getState();
-    const { user } = state.Auth;
+    const { authUser } = state.Auth;
 
-    if (!user) {
+    if (!authUser) {
       showError("User is not logged in!");
       return rejectWithValue("User is not logged in!");
     }
 
     try {
-      const data = await fetchAPI(`${getEnvValue('API_BASE')}/todos/update`, {
+      const data = await fetchAPI(`${API_BASE}/todos/update`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: user?.token,
+          Authorization: authUser?.token,
         },
         body: JSON.stringify({ id, completed }),
       });
@@ -110,18 +110,18 @@ export const deleteToDo = createAsyncThunk(
   "ToDo/deleteToDo",
   async ({ id }, { rejectWithValue, dispatch, getState }) => {
     const state = getState();
-    const { user } = state.Auth;
+    const { authUser } = state.Auth;
 
-    if (!user) {
+    if (!authUser) {
       showError("User is not logged in!");
       return rejectWithValue("User is not logged in!");
     }
 
     try {
-      const data = await fetchAPI(`${getEnvValue('API_BASE')}/todos/delete/${id}`, {
+      const data = await fetchAPI(`${API_BASE}/todos/delete/${id}`, {
         method: "DELETE",
         headers: {
-          Authorization: user?.token,
+          Authorization: authUser?.token,
         },
       });
 

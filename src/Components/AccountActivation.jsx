@@ -1,9 +1,10 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; // If using React Router
 
 export default function ActivationSuccess() {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Hook for navigation
 
   const handleGoToDashboard = () => {
+    // Navigate to the dashboard or homepage
     navigate("/dashboard");
   };
 

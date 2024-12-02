@@ -15,13 +15,15 @@ export default function Login() {
   const { isExpired } = useJwt(token);
 
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    dispatch(login({ email, password, navigate }))
+    const data = await dispatch(login({ email, password, navigate })).unwrap();
+    data?.token && navigate("/dashboard");
   };
 
-  const handleGoogleLogin = () => {
-    dispatch(verifyGoogleUser({ token, isExpired, navigate }))
+  const handleGoogleLogin = async () => {
+    const data = await dispatch(verifyGoogleUser({ token, isExpired })).unwrap();
+    data?.token && navigate("/dashboard");
   };
 
   useEffect(() => {

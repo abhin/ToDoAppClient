@@ -1,14 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { showError, showSuccess } from "../../Functions/utils";
+import { showError, showSuccess } from "../../Functions/Message";
 import storage from "redux-persist/lib/storage";
 import { persistReducer } from "redux-persist";
-import {getEnvValue} from "../../Functions/utils.jsx";
 
 export const login = createAsyncThunk(
   "auth/login",
-  async ({ email, password, navigate }, { rejectWithValue }) => {
+  async ({ email, password }, { rejectWithValue }) => {
     try {
-      const response = await fetch(`${getEnvValue('API_BASE')}/auth/login`, {
+      const response = await fetch("http://localhost:8000/api/v1/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -24,8 +23,7 @@ export const login = createAsyncThunk(
       }
 
       showSuccess("Login successful!");
-      navigate("/dashboard");
-      return data.user;
+      return data?.user;
     } catch (err) {
       showError(err.message);
       return rejectWithValue(err.message);
@@ -36,14 +34,14 @@ export const login = createAsyncThunk(
 
 export const verifyGoogleUser = createAsyncThunk(
   "auth/verifyGoogleUser",
-  async ({ token, isExpired, navigate }, { rejectWithValue }) => {
+  async ({ token, isExpired }, { rejectWithValue }) => {
     if (isExpired) {
       showError("Login expired. Please try again");
       return rejectWithValue("Login expired");
     }
 
     try {
-      const response = await fetch(`${getEnvValue('API_BASE')}/auth/google/verify`, {
+      const response = await fetch("http://localhost:8000/api/v1/auth/google/verify", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -59,8 +57,7 @@ export const verifyGoogleUser = createAsyncThunk(
       }
 
       showSuccess(data.message);
-      navigate("/Dashboard"); 
-      return data.user;
+      return data?.user;
     } catch (err) {
       showError(err.message);
       return rejectWithValue(err.message);
@@ -72,20 +69,20 @@ export const verifyGoogleUser = createAsyncThunk(
 const authSlice = createSlice({
   name: "auth",
   initialState: {
-    user: null,
+    authUser: null,
     nextPage: null,
     loading: false,
     error: null,
   },
   reducers: {
     googleLogin: () => {
-      window.open(`${getEnvValue('API_BASE')}/auth/google`, "_self");
+      window.open("http://localhost:8000/api/v1/auth/google", "_self");
     },
     logout: (state) => {
-      state.user = null;
+      state.authUser = null;
     },
-    setUser: (state, action) => {
-      state.user = action.payload;
+    setAuthUser: (state, action) => {
+      state.authUser = action.payload;
     }
   },
   extraReducers: (builder) => {
@@ -96,7 +93,7 @@ const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload;
+        state.authUser = action.payload;
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
@@ -108,7 +105,7 @@ const authSlice = createSlice({
       })
       .addCase(verifyGoogleUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload;
+        state.authUser = action.payload;
       })
       .addCase(verifyGoogleUser.rejected, (state, action) => {
         state.loading = false;
@@ -124,5 +121,5 @@ const persistConfig = {
 
 const persistedAuthReducer = persistReducer(persistConfig, authSlice.reducer);
 
-export const { googleLogin, logout, setUser } = authSlice.actions;
+export const { googleLogin, logout, setAuthUser } = authSlice.actions;
 export default persistedAuthReducer;

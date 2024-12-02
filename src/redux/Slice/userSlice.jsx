@@ -1,14 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { showError, showSuccess } from "../../Functions/utils";
-import fetchAPI from "../../Functions/utils";
-import {getEnvValue} from "../../Functions/utils.jsx";
-import {setUser} from "./authSlice"
+import { showError, showSuccess } from "../../Functions/Message";
+import fetchAPI from "../../Functions/FetchAPI";
+import { API_BASE } from "../../configs/constants";
 
 export const signUp = createAsyncThunk(
   "user/signUp",
-  async ({ name, email, password }, { rejectWithValue }) => {
+  async ({ name, email, password, navigate }, { rejectWithValue }) => {
     try {
-      const data = await fetchAPI(`${getEnvValue('API_BASE')}/users/signup`, {
+      const data = await fetchAPI(`${API_BASE}/users/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -22,7 +21,7 @@ export const signUp = createAsyncThunk(
       }
 
       showSuccess(data.message);
-      return data;
+      return navigate;
     } catch (err) {
       showError(err.message);
       return rejectWithValue(err.message);
@@ -34,13 +33,13 @@ export const updateProfile = createAsyncThunk(
   "user/updateProfile",
   async ({ formData }, { rejectWithValue, getState, dispatch }) => {
     const state = getState();
-    const { user } = state.Auth;
+    const { authUser } = state.Auth;
 
     try {
-      const response = await fetch(`${getEnvValue('API_BASE')}/users/updateprofile`, {
+      const response = await fetch(`${API_BASE}/users/updateprofile`, {
         method: "PUT",
         headers: {
-          Authorization: user?.token,
+          Authorization: authUser?.token,
         },
         body: formData,
       });
@@ -53,8 +52,7 @@ export const updateProfile = createAsyncThunk(
       }
 
       showSuccess(data.message || "Profile updated successfully!");
-      dispatch(setUser(data.user));
-      return data.user;
+      return data?.user;
     } catch (err) {
       showError(err.message || "An unexpected error occurred.");
       return rejectWithValue(err.message || "Failed to update profile.");

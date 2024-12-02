@@ -1,26 +1,30 @@
-import { useState } from "react";
+import {useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateProfile } from "../redux/Slice/userSlice";
-import { getEnvValue } from "../../Functions/utils.jsx";
+import { setAuthUser } from "../redux/Slice/authSlice";
+import { showError } from "../Functions/Message";
+import { getProfilePicUrl } from "../Functions/utilities";
 
 export default function UserProfile() {
-  const { user } = useSelector((state) => state.Auth) || {};
-  const { name = "", profilePic = "" } = user || {};
+  const { authUser } = useSelector((state) => state.Auth) || {};
+  const { error } = useSelector((state) => state.User) || {};
+  const { name = "", profilePic = "" } = authUser || {};
 
   const dispatch = useDispatch();
   const [uName, setUname] = useState(name);
   const [profilePhoto, setProfilePhoto] = useState(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("name", uName || name);
     if (profilePhoto) {
       formData.append("profilePhoto", profilePhoto);
     }
-
     setProfilePhoto(null);
-    dispatch(updateProfile({ formData }));
+
+    const userData = await dispatch(updateProfile({ formData })).unwrap();
+    userData && dispatch(setAuthUser(userData)) || showError(error);
   };
 
   return (
@@ -54,7 +58,7 @@ export default function UserProfile() {
               {profilePic && (
                 <img
                   className="m-2 d-block"
-                  src={`${getEnvValue("SERVER_URL")}/${profilePic}`}
+                  src={getProfilePicUrl(authUser)}
                   style={{ width: "150px", height: "150px" }}
                   alt="Profile"
                 />
