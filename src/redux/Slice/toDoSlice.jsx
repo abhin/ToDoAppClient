@@ -59,7 +59,7 @@ export const getAllToDo = createAsyncThunk(
 
     try {
       const data = await fetchAPI(
-        `${import.meta.env?.VITE_API_BASE}/todos/read`,
+        `${BASE_URL}/todos/read`,
         {
           method: "GET",
           headers: {
